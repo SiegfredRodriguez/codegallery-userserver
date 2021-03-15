@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserController {
 
     private UserService userService;
@@ -34,7 +32,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     public User findUser(@PathVariable("userId") UUID userId) {
         return userService.findUser(userId)
                 .orElseThrow(() ->
@@ -42,12 +40,12 @@ public class UserController {
                 );
     }
 
-    @GetMapping("/users")
+    @GetMapping("")
     public List<User> findUsers() {
         return userService.getUsers();
     }
 
-    @PostMapping("/user")
+    @PostMapping("/")
     public User createUser(@RequestBody User user) {
         try {
             return userService.createUser(user.getUsername(), user.getPassword());
@@ -56,7 +54,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{userId}")
+    @PutMapping("/{userId}")
     public User updateUser(@PathVariable("userId") UUID userId, @RequestBody User user) {
         user.setUuid(userId);
 
@@ -71,7 +69,7 @@ public class UserController {
         return user;
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteUser(@PathVariable("userId") UUID userId, @RequestParam(value = "quiet", defaultValue = "false") boolean isQuiet) {
         try {
@@ -82,6 +80,5 @@ public class UserController {
             }
         }
     }
-
 
 }
