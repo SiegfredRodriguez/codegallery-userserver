@@ -40,12 +40,12 @@ public class UserController {
                 );
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<User> findUsers() {
         return userService.getUsers();
     }
 
-    @PostMapping("")
+    @PostMapping
     public User createUser(@RequestBody User user) {
         try {
             return userService.createUser(user.getUsername(), user.getPassword());
