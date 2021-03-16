@@ -6,6 +6,7 @@ import com.siegfred.userserver.domain.exception.NoSuchUserException;
 import com.siegfred.userserver.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -33,17 +35,21 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User findUser(@PathVariable("userId") UUID userId) {
-        return userService.findUser(userId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND)
-                );
+    public ResponseEntity<User> findUser(@PathVariable("userId") UUID userId) {
+        Optional<User> user = userService.findUser(userId);
+
+        if (user.isPresent()) {
+            return ResponseEntity.ok().body(user.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
     public List<User> findUsers() {
         return userService.getUsers();
     }
+
 
     @PostMapping
     public User createUser(@RequestBody User user) {
